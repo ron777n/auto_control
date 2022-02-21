@@ -22,7 +22,7 @@ def get_kivy_image_from_bytes(image_bytes, file_extension):
 
 
 my_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-my_socket.connect(("10.0.0.30", 69))
+my_socket.connect(("localhost", 69))
 
 
 def echo(msg):
@@ -100,29 +100,6 @@ class communicationApp(App):
 
 def main():
     communicationApp().run()
-
-
-def command_line():
-    # my_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    # my_socket.connect(("10.0.0.30", 69))  # 127.0.0.1
-    cmd = ""
-    while True:
-        msg = input("Enter your message:\n")
-        my_socket.send(msg.encode())
-        if msg.startswith("screen"):
-            got = my_socket.recv(1024).decode()
-            data = my_socket.recv(16384*16*4)
-        else:
-            got = my_socket.recv(1024).decode()
-            if got.count(";") < 2:
-                continue
-            cmd, options, data = got.split(";")
-        print(type(data))
-        print(data)
-        if cmd == "quit":
-            break
-
-    my_socket.close()
 
 
 if __name__ == '__main__':
