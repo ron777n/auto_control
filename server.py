@@ -24,8 +24,8 @@ def main():
         try:
             print("client connected", client_address)
             while True:
-                cmd, options, data = got.split(";")
                 got = client_socket.recv(1024).decode()
+                cmd, options, data = got.split(";")
                 if got.count(";") != 2:
                     client_socket.send(form("error_code", "invalid use").encode())
                     continue
@@ -71,7 +71,7 @@ def main():
                 else:
                     client_socket.send("error_code", "command not recognized")
         except (ConnectionAbortedError, ConnectionResetError, ConnectionError, ConnectionRefusedError):
-            break
+            pass
         client_socket.close()
         print(client_address, "has disconnected")
     server_socket.close()

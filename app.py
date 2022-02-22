@@ -22,7 +22,7 @@ def get_kivy_image_from_bytes(image_bytes, file_extension):
 
 
 my_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-my_socket.connect(("localhost", 69))
+my_socket.connect(("10.0.0.27", 69))
 
 
 def echo(msg):
