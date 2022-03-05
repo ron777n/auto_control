@@ -22,13 +22,7 @@ def get_kivy_image_from_bytes(image_bytes, file_extension):
 
 
 my_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-my_socket.connect(("10.0.0.27", 69))
-
-
-def echo(msg):
-    my_socket.send(("echo;;"+msg).encode())
-    return my_socket.recv(1024)
-
+my_socket.connect(("127.0.0.1", 69))
 
 # class Touch(Widget):
 
@@ -45,15 +39,15 @@ class MainWin(Screen):
         super().__init__()
         self.cols = 2
 
-        my_socket.send(self.msg.encode())
-        my_socket.recv(1024).decode()
+        my_socket.send(self.msg.encode('utf-8'))
+        my_socket.recv(1024).decode('utf-8')
         data = my_socket.recv(16384*16*4)
         self.img = 0
         self.update_screen()
 
     def update_screen(self):
         try:
-            my_socket.send(self.msg.encode())
+            my_socket.send(self.msg.encode('utf-8'))
             my_socket.recv(2048)
             image_chunk = my_socket.recv(2048)
             new_img = image_chunk
@@ -77,16 +71,16 @@ class MainWin(Screen):
         tw, th = touch.spos
         x, y = server_x/ww*(ww*tw), server_y/wh*(wh-wh*th)
         if not touch.is_double_tap:
-            my_socket.send(form("mouse", f"{int(x)}, {int(y)}", "move").encode())
+            my_socket.send(form("mouse", f"{int(x)}, {int(y)}", "move").encode('utf-8'))
         else:
             print("egg")
-            my_socket.send(form("mouse", f"{int(x)}, {int(y)}", "click").encode())
+            my_socket.send(form("mouse", f"{int(x)}, {int(y)}", "click").encode('utf-8'))
         my_socket.recv(1024)
         self.put = touch.spos[1]
 
     def on_touch_move(self, touch):
         change = int(server_y/wh*(wh*(self.put-touch.spos[1])))
-        my_socket.send(form("mouse", change, "scroll").encode())
+        my_socket.send(form("mouse", change, "scroll").encode('utf-8'))
         my_socket.recv(1024)
         self.put = touch.spos[1]
 

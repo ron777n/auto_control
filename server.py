@@ -24,15 +24,15 @@ def main():
         try:
             print("client connected", client_address)
             while True:
-                got = client_socket.recv(1024).decode()
+                got = client_socket.recv(1024).decode('utf-8')
                 cmd, options, data = got.split(";")
                 if got.count(";") != 2:
-                    client_socket.send(form("error_code", "invalid use").encode())
+                    client_socket.send(form("error_code", "invalid use").encode('utf-8'))
                     continue
                 if cmd == "echo":
-                    client_socket.send(form("echo_message", data).encode())
+                    client_socket.send(form("echo_message", data).encode('utf-8'))
                 elif cmd == "quit":
-                    client_socket.send(form("quit", "").encode())
+                    client_socket.send(form("quit", "").encode('utf-8'))
                     break
                 elif cmd == "mouse":
                     if options == "":
@@ -43,15 +43,15 @@ def main():
                             pyautogui.click(int(x), int(y))
                         else:
                             pyautogui.click()
-                        client_socket.send(form("notification", "clicked!").encode())
+                        client_socket.send(form("notification", "clicked!").encode('utf-8'))
                     elif "move" in options:
                         x, y = data.split(", ")
                         pyautogui.moveTo(int(x), int(y))
-                        client_socket.send(form("notification", f"moved mouse to ({x}, {y})").encode())
+                        client_socket.send(form("notification", f"moved mouse to ({x}, {y})").encode('utf-8'))
                     elif "scroll" in options:
                         amount = int(data)
                         pyautogui.scroll(amount)
-                        client_socket.send(form("notification", f"scrolled by {amount}").encode())
+                        client_socket.send(form("notification", f"scrolled by {amount}").encode('utf-8'))
                 elif cmd == "screen":
                     screen = pyautogui.screenshot()
                     img_byte_arr = io.BytesIO()
@@ -65,7 +65,7 @@ def main():
                     client_socket.send(form("screenshot", f"{screen.size[0]}, {screen.size[1]}").encode('utf-8'))
                 elif cmd == "system":
                     if "shut down" in options:
-                        client_socket.send(form("quit", data).encode())
+                        client_socket.send(form("quit", data).encode('utf-8'))
                         close = True
                         break
                 else:
